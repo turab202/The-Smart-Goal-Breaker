@@ -218,20 +218,78 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-12 mt-auto">
-        <div className="container mx-auto px-4 text-center max-w-5xl">
-          <p className="text-sm font-medium text-slate-500 mb-6">
-            Engineered for <span className="text-slate-900">Peak Performance</span>.
-          </p>
+    <footer className="border-t border-slate-200 bg-white py-12 mt-auto">
+  <div className="container mx-auto px-4 text-center max-w-5xl space-y-4">
 
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            <span>Gemini 2.5 Flash</span>
-            <span>Next.js 14</span>
-            <span>Tailwind CSS</span>
-            <span>FastAPI</span>
-          </div>
-        </div>
-      </footer>
+    {/* Made by Zahra */}
+    <p className="text-sm font-medium text-slate-500">
+      Made with ❤️ by{" "}
+      <a
+        href="https://zahra-mustefa.netlify.app"
+        className="text-orange-600 hover:underline transition-colors"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Zahra Mustefa
+      </a>{" "}
+      — Full-Stack Developer
+    </p>
+
+    {/* Social Links */}
+    <div className="flex justify-center items-center gap-6 text-slate-500">
+      <a
+        href="https://github.com/turab202"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:text-orange-600 transition-colors"
+        aria-label="GitHub"
+      >
+        <Github className="h-5 w-5" />
+      </a>
+      <a
+        href="https://t.me/Turab20211812"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:text-orange-600 transition-colors"
+        aria-label="Telegram"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          className="h-5 w-5"
+        >
+          <path d="M12 0C5.372 0 0 5.373 0 12c0 6.628 5.372 12 12 12s12-5.372 12-12c0-6.627-5.372-12-12-12zm5.273 8.707l-1.544 7.29c-.116.522-.42.648-.851.404l-2.354-1.735-1.135 1.093c-.126.125-.232.232-.474.232l.17-2.414 4.39-3.974c.19-.168-.041-.262-.296-.094l-5.426 3.41-2.338-.73c-.508-.16-.517-.508.106-.754l9.137-3.52c.423-.163.794.104.654.748z"/>
+        </svg>
+      </a>
+      <a
+        href="https://zahra-mustefa.netlify.app"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:text-orange-600 transition-colors"
+        aria-label="Portfolio"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          className="h-5 w-5"
+        >
+          <path d="M12 0C5.373 0 0 5.372 0 12s5.373 12 12 12 12-5.372 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10zm-1-17h2v8h-2zm0 10h2v2h-2z"/>
+        </svg>
+      </a>
+    </div>
+
+    {/* Tech stack badges */}
+    <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-4">
+      <span>Next.js 14</span>
+      <span>Tailwind CSS</span>
+      <span>FastAPI</span>
+      <span>Gemini 2.5 Flash</span>
+    </div>
+  </div>
+</footer>
+
     </div>
   );
 }
