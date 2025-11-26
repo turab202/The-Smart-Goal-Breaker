@@ -18,3 +18,6 @@ class GoalBreakdownResponse(BaseModel):
     complexityReasoning: str
     tasks: List[TaskSchema]
     createdAt: Optional[str] = None
+
+    class Config:
+        from_attributes = True

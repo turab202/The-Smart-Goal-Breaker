@@ -21,7 +21,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],  # Next.js default ports
+    allow_origins=["*"],  # Allow all origins for now, you can restrict later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,11 +34,17 @@ gemini_service = GeminiService()
 async def root():
     return {"message": "Smart Goal Breaker API is running!"}
 
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
 @app.get("/api/v1/goals", response_model=List[GoalBreakdownResponse])
 async def get_goals(db: Session = Depends(get_db)):
-    goals = db.query(models.GoalBreakdown).order_by(models.GoalBreakdown.created_at.desc()).all()
-    return [goal.to_dict() for goal in goals]
-
+    try:
+        goals = db.query(models.GoalBreakdown).order_by(models.GoalBreakdown.created_at.desc()).all()
+        return [goal.to_dict() for goal in goals]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 @app.post("/api/v1/goals/generate", response_model=GoalBreakdownResponse)
 async def create_goal(goal_data: GoalCreate, db: Session = Depends(get_db)):
     try:
@@ -51,7 +57,38 @@ async def create_goal(goal_data: GoalCreate, db: Session = Depends(get_db)):
             refined_goal=ai_result["refinedGoal"],
             complexity_score=ai_result["complexityScore"],
             complexity_reasoning=ai_result["complexityReasoning"],
-            tasks=ai_result["tasks"]
+            tasks=ai_result["tasks"]  # This now matches the schema
+        )
+        
+        db.add(db_goal)
+        db.commit()
+        db.refresh(db_goal)
+        
+        return db_goal.to_dict()
+        
+    except Exception as e:
+        db.rollback()
+        # Provide more specific error messages
+        if "AI processing failed" in str(e):
+            raise HTTPException(status_code=422, detail=f"Goal analysis failed: {str(e)}")
+        elif "GEMINI_API_KEY" in str(e):
+            raise HTTPException(status_code=500, detail="AI service configuration error")
+        else:
+            raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+            
+@app.post("/api/v1/goals/generate", response_model=GoalBreakdownResponse)
+async def create_goal(goal_data: GoalCreate, db: Session = Depends(get_db)):
+    try:
+        # Generate breakdown using Gemini
+        ai_result = gemini_service.break_down_goal(goal_data.goal)
+        
+        # Create database record
+        db_goal = models.GoalBreakdown(
+            original_goal=goal_data.goal,
+            refined_goal=ai_result["refinedGoal"],
+            complexity_score=ai_result["complexityScore"],
+            complexity_reasoning=ai_result["complexityReasoning"],
+            tasks=ai_result["tasks"]  # This should match TaskSchema directly
         )
         
         db.add(db_goal)
@@ -66,15 +103,19 @@ async def create_goal(goal_data: GoalCreate, db: Session = Depends(get_db)):
 
 @app.delete("/api/v1/goals/{goal_id}")
 async def delete_goal(goal_id: str, db: Session = Depends(get_db)):
-    goal = db.query(models.GoalBreakdown).filter(models.GoalBreakdown.id == goal_id).first()
-    
-    if not goal:
-        raise HTTPException(status_code=404, detail="Goal not found")
-    
-    db.delete(goal)
-    db.commit()
-    
-    return {"message": "Goal deleted successfully"}
+    try:
+        goal = db.query(models.GoalBreakdown).filter(models.GoalBreakdown.id == goal_id).first()
+        
+        if not goal:
+            raise HTTPException(status_code=404, detail="Goal not found")
+        
+        db.delete(goal)
+        db.commit()
+        
+        return {"message": "Goal deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

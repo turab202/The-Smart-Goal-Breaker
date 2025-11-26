@@ -24,6 +24,6 @@ class GoalBreakdown(Base):
             "refinedGoal": self.refined_goal,
             "complexityScore": self.complexity_score,
             "complexityReasoning": self.complexity_reasoning,
-            "tasks": self.tasks,
+            "tasks": self.tasks,  # This now matches TaskSchema
             "createdAt": self.created_at.isoformat() if self.created_at else None
         }
