@@ -1,10 +1,11 @@
 import { GoalBreakdown } from "../types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
+// Use your Render backend URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://the-smart-goal-breaker.onrender.com";
 
 export const ApiClient = {
   createGoal: async (vagueGoal: string): Promise<GoalBreakdown> => {
-    const response = await fetch(`${API_BASE_URL}/goals/generate`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/goals/generate`, {  // Fixed URL
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -21,7 +22,7 @@ export const ApiClient = {
   },
 
   getGoals: async (): Promise<GoalBreakdown[]> => {
-    const response = await fetch(`${API_BASE_URL}/goals`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/goals`, {  // Fixed URL
       headers: {
         'Content-Type': 'application/json',
       },
@@ -35,7 +36,7 @@ export const ApiClient = {
   },
 
   deleteGoal: async (id: string): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/goals/${id}`, { 
+    const response = await fetch(`${API_BASE_URL}/api/v1/goals/${id}`, {  // Fixed URL
       method: 'DELETE' 
     });
     

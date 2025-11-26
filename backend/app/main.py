@@ -21,7 +21,12 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for now, you can restrict later
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001", 
+        "https://the-smart-goal-breaker.vercel.app",  # Your Vercel frontend
+        "https://the-smart-goal-breaker.onrender.com"  # Your backend
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -75,7 +80,7 @@ async def create_goal(goal_data: GoalCreate, db: Session = Depends(get_db)):
             raise HTTPException(status_code=500, detail="AI service configuration error")
         else:
             raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
-            
+
 @app.post("/api/v1/goals/generate", response_model=GoalBreakdownResponse)
 async def create_goal(goal_data: GoalCreate, db: Session = Depends(get_db)):
     try:
