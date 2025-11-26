@@ -67,9 +67,20 @@ export default function Home() {
               System Operational
             </div>
 
-            <Button size="sm" variant="ghost" className="text-slate-600 hover:text-orange-600">
-              <Github className="h-5 w-5" />
-            </Button>
+            <a 
+  href="https://github.com/turab202" 
+  target="_blank" 
+  rel="noopener noreferrer"
+>
+  <Button 
+    size="sm" 
+    variant="ghost" 
+    className="text-slate-600 hover:text-orange-600"
+  >
+    <Github className="h-5 w-5" />
+  </Button>
+</a>
+
           </nav>
         </div>
       </header>
